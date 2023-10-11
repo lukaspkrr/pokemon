@@ -12,6 +12,7 @@ module.exports = {
             customValidators: [],
           },
         ],
+        'react-hooks/exhaustive-deps': 'off',
       },
     },
   ],
