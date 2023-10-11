@@ -7,11 +7,17 @@
     "ios": "react-native run-ios",
     "lint": "eslint .",
     "start": "react-native start",
-    "test": "jest"
+    "test": "jest",
+    "clean-ios": "cd ios && rm -rf Pods build Podfile.lock && pod deintegrate && pod install; cd ..",
+    "clean-android": "cd android && ./gradlew clean; cd .."
   },
   "dependencies": {
+    "@react-navigation/bottom-tabs": "^6.5.9",
+    "@react-navigation/native": "^6.1.8",
     "react": "18.2.0",
-    "react-native": "0.72.5"
+    "react-native": "0.72.5",
+    "react-native-safe-area-context": "^4.7.2",
+    "react-native-screens": "^3.25.0"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
