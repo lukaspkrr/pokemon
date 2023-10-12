@@ -14,7 +14,7 @@ export interface Pokemon {
   id: number;
   idText: string | null;
   name: string | null;
-  sprite: string | null;
+  sprite?: string;
   types: string[];
 }
 

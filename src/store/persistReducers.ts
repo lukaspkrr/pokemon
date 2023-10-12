@@ -6,7 +6,7 @@ export default (reducers: any) => {
     {
       key: 'Pokemon',
       storage: AsyncStorage,
-      whitelist: [],
+      whitelist: ['pokemons'],
     },
     reducers,
   );
