@@ -15,6 +15,9 @@ export const InputContainer = styled.Pressable`
   border-radius: 10px;
   align-items: center;
   background-color: ${({theme}) => theme.secundary};
+  border-width: 1px;
+  border-color: ${({theme}) =>
+    theme.title === 'light' ? theme.highlight : theme.primary};
 `;
 
 export const SearchInput = styled.TextInput.attrs(({theme}) => ({

@@ -55,22 +55,20 @@ const Pokedex: React.FC = () => {
   return (
     <Container>
       <InputContainer onPress={onTouchInputContainer}>
-        <>
-          <MaterialIcon name="search" size={25} />
-          <SearchInput
-            ref={searchInputRef}
-            onChangeText={setSearchText}
-            value={searchText}
-            maxLength={40}
-            placeholder="Search Pokemon"
-          />
-          <CleanButton
-            onPress={onCleanInput}
-            visible={existSearchText}
-            disabled={!existSearchText}>
-            <MaterialIcon name="close" size={25} />
-          </CleanButton>
-        </>
+        <MaterialIcon name="search" size={25} />
+        <SearchInput
+          ref={searchInputRef}
+          onChangeText={setSearchText}
+          value={searchText}
+          maxLength={40}
+          placeholder="Search Pokemon"
+        />
+        <CleanButton
+          onPress={onCleanInput}
+          visible={existSearchText}
+          disabled={!existSearchText}>
+          <MaterialIcon name="close" size={25} />
+        </CleanButton>
       </InputContainer>
       <Flatlist
         data={data.pokemons}
