@@ -22,8 +22,14 @@ import {PokemonsTypedSelector} from '~/store/modules/pokemons/reducer';
 import {pokemonsRequest} from '~/store/modules/pokemons/action';
 
 import Pokeball from '~/assets/images/pokeball.png';
+import {Pokemon} from '~/store/modules/pokemons/types';
+import {NavigationProp} from '@react-navigation/native';
+import {PokedexStackParamList} from '~/routes/pokedexStack';
 
-const Pokedex: React.FC = () => {
+interface PokedexHomeProps {
+  navigation: NavigationProp<PokedexStackParamList>;
+}
+const PokedexHome: React.FC<PokedexHomeProps> = ({navigation}) => {
   const dispatch = useDispatch();
 
   const {data} = PokemonsTypedSelector(state => state.pokemons);
@@ -32,11 +38,13 @@ const Pokedex: React.FC = () => {
   const [searchText, setSearchText] = useState('');
 
   useEffect(() => {
+    // Get pokemons if dont exist in redux persist
     if (data.pokemons.length <= 0) {
       dispatch(pokemonsRequest());
     }
   }, []);
 
+  // Verify if user typed in the search input
   const existSearchText = useMemo(() => {
     return searchText?.length > 0;
   }, [searchText]);
@@ -48,8 +56,14 @@ const Pokedex: React.FC = () => {
     }
   };
 
+  // If user click outside Input
   const onTouchInputContainer = () => {
     searchInputRef.current?.focus();
+  };
+
+  // When select pokemon
+  const openPokemonDetail = (pokemon: Pokemon) => {
+    navigation.navigate('PokemonDetail', {pokemon});
   };
 
   return (
@@ -74,7 +88,9 @@ const Pokedex: React.FC = () => {
         data={data.pokemons}
         numColumns={2}
         renderItem={({item}) => (
-          <Card pokemonType={item.types?.[0]}>
+          <Card
+            onPress={() => openPokemonDetail(item)}
+            pokemonType={item.types?.[0]}>
             <CardBackGroundImage
               source={Pokeball}
               pokemonType={item.types?.[0]}>
@@ -100,4 +116,4 @@ const Pokedex: React.FC = () => {
   );
 };
 
-export default Pokedex;
+export default PokedexHome;

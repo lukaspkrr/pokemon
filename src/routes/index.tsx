@@ -1,37 +1,28 @@
 import React from 'react-native';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
-import {Pokedex, Moves, Abilities, Items, Locations} from '~/pages';
+import {Moves, Abilities, Items, Locations} from '~/pages';
 
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
-import {DarkModeButtonComponent} from '~/components';
 
 import {useTheme} from 'styled-components/native';
+import PokedexStack from './pokedexStack';
 
 const Tab = createBottomTabNavigator();
 
 const Routes = () => {
-  const {secundary, text} = useTheme();
+  const {secundary} = useTheme();
   return (
     <Tab.Navigator
       screenOptions={{
-        headerStyle: {
-          backgroundColor: secundary,
-        },
-        headerShadowVisible: false,
-        headerTintColor: text,
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-        headerRight: () => <DarkModeButtonComponent />,
-
+        headerShown: false,
         tabBarStyle: {
           backgroundColor: secundary,
           borderTopWidth: 0,
         },
       }}>
       <Tab.Screen
-        name="Pokedex"
-        component={Pokedex}
+        name="PokedexStack"
+        component={PokedexStack}
         options={{
           tabBarIcon: ({color, size}) => (
             <MaterialIcons name="catching-pokemon" color={color} size={size} />
