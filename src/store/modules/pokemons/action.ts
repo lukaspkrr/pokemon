@@ -30,7 +30,7 @@ export function pokemonPageRequest(page: number) {
   };
 }
 
-export function pokemonPageSuccess(page: number, data: Pokemon[]) {
+export function pokemonPageSuccess(page: number, data?: Pokemon[]) {
   return {
     type: PokemonsActionTypes.POKEMON_PAGE_SUCCESS,
     payload: {

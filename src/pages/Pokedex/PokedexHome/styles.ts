@@ -2,6 +2,7 @@ import styled from 'styled-components/native';
 import {FlatList} from 'react-native';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import {Pokemon} from '~/store/modules/pokemons/types';
+import {PaginationComponent} from '~/components';
 
 export const Container = styled.SafeAreaView`
   flex: 1;
@@ -43,8 +44,14 @@ export const CleanButton = styled.TouchableOpacity<CleanButtonProp>`
 
 export const Flatlist = styled(FlatList<Pokemon>).attrs({
   contentContainerStyle: {
-    paddingBottom: 20,
+    paddingBottom: 70,
     paddingTop: 5,
     paddingHorizontal: 5,
   },
 })``;
+
+export const Pagination = styled(PaginationComponent)`
+  position: absolute;
+  bottom: 0;
+  margin: 10px 15px;
+`;

@@ -16,6 +16,7 @@ const INITIAL_STATE: PokemonsState = {
     pokemonQtd: 0,
     pokemonList: [],
     paginatedPokemonDetailedList: {},
+    currentPageData: [],
   },
   loading: false,
   error: false,
@@ -54,15 +55,23 @@ export default function pokemons(state = INITIAL_STATE, action: any) {
       };
     }
     case PokemonsActionTypes.POKEMON_PAGE_SUCCESS: {
+      let newDetailedList = null;
+      if (!state.data?.paginatedPokemonDetailedList?.[action.payload.page]) {
+        newDetailedList = {
+          ...state.data.paginatedPokemonDetailedList,
+          [action.payload.page]: action.payload.data,
+        };
+      }
       return {
         ...state,
         loading: false,
         data: {
           ...state.data,
-          paginatedPokemonDetailedList: {
-            ...state.data.paginatedPokemonDetailedList,
-            [action.payload.page]: action.payload.data,
-          },
+          currentPage: action.payload.page,
+          currentPageData: action.payload.data,
+          ...(newDetailedList && {
+            paginatedPokemonDetailedList: newDetailedList,
+          }),
         },
       };
     }

@@ -81,40 +81,50 @@ export function* getPokemonPage({payload}: PayloadAction<{page: number}>) {
       state => state.pokemons,
     );
 
-    const firstId = payload.page * POKEMON_PAGE_SIZE;
-    const lastId = firstId + POKEMON_PAGE_SIZE;
+    if (!reducerData.paginatedPokemonDetailedList?.[payload.page]) {
+      const firstId = payload.page * POKEMON_PAGE_SIZE;
+      const lastId = firstId + POKEMON_PAGE_SIZE;
 
-    const pokemonList = reducerData.pokemonList.slice(firstId, lastId);
+      const pokemonList = reducerData.pokemonList.slice(firstId, lastId);
 
-    let detailedPokemonList: Pokemon[] = [];
+      let detailedPokemonList: Pokemon[] = [];
 
-    yield Promise.all(
-      pokemonList.map(async pokemon => {
-        const {data: detailPokemon}: AxiosResponse = await Api.get(
-          `/pokemon/${pokemon.id}`,
-        );
+      yield Promise.all(
+        pokemonList.map(async pokemon => {
+          const {data: detailPokemon}: AxiosResponse = await Api.get(
+            `/pokemon/${pokemon.id}`,
+          );
 
-        const pokeData: Pokemon = {
-          id: detailPokemon.id,
-          idText: formatId(detailPokemon.id),
-          name: detailPokemon.name,
-          sprite: detailPokemon.sprites.other['official-artwork'].front_default,
-          types: detailPokemon.types.map(
-            (el: {type: {name: any}}) => el.type.name,
-          ),
-          height: detailPokemon.height,
-          weight: detailPokemon.weight,
-          abilities: detailPokemon.abilities?.map((el: any) => ({
-            name: el?.ability.name,
-            isHidden: el?.is_hidden,
-          })),
-        };
+          const pokeData: Pokemon = {
+            id: detailPokemon.id,
+            idText: formatId(detailPokemon.id),
+            name: detailPokemon.name,
+            sprite:
+              detailPokemon.sprites.other['official-artwork'].front_default,
+            types: detailPokemon.types.map(
+              (el: {type: {name: any}}) => el.type.name,
+            ),
+            height: detailPokemon.height,
+            weight: detailPokemon.weight,
+            abilities: detailPokemon.abilities?.map((el: any) => ({
+              name: el?.ability.name,
+              isHidden: el?.is_hidden,
+            })),
+          };
 
-        detailedPokemonList.push(pokeData);
-      }),
-    );
+          detailedPokemonList.push(pokeData);
+        }),
+      );
 
-    yield put(pokemonPageSuccess(payload.page, detailedPokemonList));
+      yield put(pokemonPageSuccess(payload.page, detailedPokemonList));
+    } else {
+      yield put(
+        pokemonPageSuccess(
+          payload.page,
+          reducerData.paginatedPokemonDetailedList[payload.page],
+        ),
+      );
+    }
   } catch (error) {
     yield put(pokemonPageFailue());
   }

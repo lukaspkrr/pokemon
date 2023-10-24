@@ -7,6 +7,7 @@ import {
   MaterialIcon,
   SearchInput,
   CleanButton,
+  Pagination,
 } from './styles';
 import {useDispatch} from 'react-redux';
 import {PokemonsTypedSelector} from '~/store/modules/pokemons/reducer';
@@ -30,18 +31,15 @@ const PokedexHome: React.FC<PokedexHomeProps> = ({navigation}) => {
 
   const searchInputRef = useRef<TextInput>(null);
   const [searchText, setSearchText] = useState('');
-  const [currentList, setCurrentList] = useState<Pokemon[]>([]);
 
   useEffect(() => {
     // Get pokemons if dont exist in redux persist
     if (data.pokemonList.length <= 0) {
       dispatch(pokemonListRequest());
-    } else if (!data.paginatedPokemonDetailedList?.[data.currentPage]) {
-      dispatch(pokemonPageRequest(data.currentPage));
     } else {
-      setCurrentList(data.paginatedPokemonDetailedList[data.currentPage]);
+      dispatch(pokemonPageRequest(data.currentPage));
     }
-  }, [data.paginatedPokemonDetailedList]);
+  }, []);
 
   // Verify if user typed in the search input
   const existSearchText = useMemo(() => {
@@ -65,6 +63,14 @@ const PokedexHome: React.FC<PokedexHomeProps> = ({navigation}) => {
     navigation.navigate('PokemonDetail', {pokemon});
   };
 
+  const onPreviousPage = () => {
+    dispatch(pokemonPageRequest(data.currentPage - 1));
+  };
+
+  const onNextPage = () => {
+    dispatch(pokemonPageRequest(data.currentPage + 1));
+  };
+
   return (
     <Container>
       <InputContainer onPress={onTouchInputContainer}>
@@ -84,8 +90,8 @@ const PokedexHome: React.FC<PokedexHomeProps> = ({navigation}) => {
         </CleanButton>
       </InputContainer>
       <Flatlist
-        data={currentList}
-        extraData={currentList}
+        data={data.currentPageData}
+        extraData={data.currentPageData}
         keyExtractor={item => String(item.id)}
         numColumns={2}
         renderItem={({item}) => (
@@ -94,6 +100,12 @@ const PokedexHome: React.FC<PokedexHomeProps> = ({navigation}) => {
             onSelectPokemon={openPokemonDetail}
           />
         )}
+      />
+      <Pagination
+        page={data.currentPage}
+        totalPages={data.totalPages}
+        onPreviousPage={onPreviousPage}
+        onNextPage={onNextPage}
       />
     </Container>
   );

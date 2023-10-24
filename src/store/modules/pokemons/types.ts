@@ -44,6 +44,7 @@ export interface PokemonsData {
   pokemonQtd: number;
   pokemonList: PokemonIdentifier[];
   paginatedPokemonDetailedList?: PaginatedPokemonDetailedList;
+  currentPageData?: Pokemon[];
 }
 
 /**
