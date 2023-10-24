@@ -18,7 +18,7 @@ import {
 import {RouteProp} from '@react-navigation/native';
 import {PokedexStackParamList} from '~/routes/pokedexStack';
 
-import Pokeball from '~/assets/images/pokeball.png';
+import Pokeball from '~/assets/images/pokeball-outline.png';
 import {
   AboutComponent,
   BaseStatsComponent,
@@ -51,7 +51,7 @@ const PokemonDetail: React.FC<PokemonDetailProps> = ({route}) => {
   const renderTabBar = (props: any) => <RNTabBar {...props} />;
 
   return (
-    <Container pokemonType={route.params?.pokemon?.types?.[0] || ''}>
+    <Container pokemonType={route.params?.pokemon?.types?.[0]}>
       <HeaderContent>
         <View>
           <PokemonName>{route.params?.pokemon?.name}</PokemonName>

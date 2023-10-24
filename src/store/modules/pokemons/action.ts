@@ -1,22 +1,47 @@
-import {PokemonsActionTypes, PokemonsData} from './types';
+import {Pokemon, PokemonsActionTypes, PokemonsData} from './types';
 
-export function pokemonsRequest() {
+export function pokemonListRequest() {
   return {
-    type: PokemonsActionTypes.POKEMONS_REQUEST,
+    type: PokemonsActionTypes.POKEMON_LIST_REQUEST,
   };
 }
 
-export function pokemonsSuccess(data: PokemonsData) {
+export function pokemonListSuccess(data: PokemonsData) {
   return {
-    type: PokemonsActionTypes.POKEMONS_SUCCESS,
+    type: PokemonsActionTypes.POKEMON_LIST_SUCCESS,
     payload: {
       data,
     },
   };
 }
 
-export function pokemonsFailure() {
+export function pokemonListFailure() {
   return {
-    type: PokemonsActionTypes.POKEMONS_FAILURE,
+    type: PokemonsActionTypes.POKEMON_LIST_FAILURE,
+  };
+}
+
+export function pokemonPageRequest(page: number) {
+  return {
+    type: PokemonsActionTypes.POKEMON_PAGE_REQUEST,
+    payload: {
+      page,
+    },
+  };
+}
+
+export function pokemonPageSuccess(page: number, data: Pokemon[]) {
+  return {
+    type: PokemonsActionTypes.POKEMON_PAGE_SUCCESS,
+    payload: {
+      page,
+      data,
+    },
+  };
+}
+
+export function pokemonPageFailue() {
+  return {
+    type: PokemonsActionTypes.POKEMON_PAGE_FAILURE,
   };
 }

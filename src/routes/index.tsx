@@ -24,6 +24,7 @@ const Routes = () => {
         name="PokedexStack"
         component={PokedexStack}
         options={{
+          tabBarLabel: 'Pokedex',
           tabBarIcon: ({color, size}) => (
             <MaterialIcons name="catching-pokemon" color={color} size={size} />
           ),
@@ -33,6 +34,7 @@ const Routes = () => {
         name="Moves"
         component={Moves}
         options={{
+          tabBarLabel: 'Moves',
           tabBarIcon: ({color, size}) => (
             <MaterialIcons name="wind-power" color={color} size={size} />
           ),
@@ -42,6 +44,7 @@ const Routes = () => {
         name="Abilities"
         component={Abilities}
         options={{
+          tabBarLabel: 'Abilities',
           tabBarIcon: ({color, size}) => (
             <MaterialIcons name="thunderstorm" color={color} size={size} />
           ),
@@ -51,6 +54,7 @@ const Routes = () => {
         name="Items"
         component={Items}
         options={{
+          tabBarLabel: 'Items',
           tabBarIcon: ({color, size}) => (
             <MaterialIcons name="all-inbox" color={color} size={size} />
           ),
@@ -60,6 +64,7 @@ const Routes = () => {
         name="Locations"
         component={Locations}
         options={{
+          tabBarLabel: 'Locations',
           tabBarIcon: ({color, size}) => (
             <MaterialIcons name="location-pin" color={color} size={size} />
           ),

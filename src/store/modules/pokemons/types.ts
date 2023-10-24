@@ -1,27 +1,49 @@
+import {PokemonTypesEnum} from '~/styles/types';
+
 /**
  * Action types
  */
 export enum PokemonsActionTypes {
-  POKEMONS_REQUEST = '@pokemons/POPKEMONS_REQUEST',
-  POKEMONS_SUCCESS = '@pokemons/POPKEMONS_SUCCESS',
-  POKEMONS_FAILURE = '@pokemons/POPKEMONS_FAILURE',
+  POKEMON_LIST_REQUEST = '@pokemons/POKEMON_LIST_REQUEST',
+  POKEMON_LIST_SUCCESS = '@pokemons/POKEMON_LIST_SUCCESS',
+  POKEMON_LIST_FAILURE = '@pokemons/POKEMON_LIST_FAILURE',
+
+  POKEMON_PAGE_REQUEST = '@pokemons/POKEMON_PAGE_REQUEST',
+  POKEMON_PAGE_SUCCESS = '@pokemons/POKEMON_PAGE_SUCCESS',
+  POKEMON_PAGE_FAILURE = '@pokemons/POKEMON_PAGE_FAILURE',
 }
 
 /**
  * Data Types
  */
-export interface Pokemon {
+export interface PokemonAbilities {
+  name: string;
+  isHidden: boolean;
+}
+
+export interface PokemonIdentifier {
   id: number;
   idText: string | null;
-  name: string | null;
-  sprite?: string;
-  types: string[];
+  name: string;
+}
+export interface Pokemon extends PokemonIdentifier {
+  sprite: string;
+  types: PokemonTypesEnum[];
+  height: number;
+  weight: number;
+  abilities: PokemonAbilities[];
+}
+
+export interface PaginatedPokemonDetailedList {
+  [page: number]: Pokemon[];
 }
 
 export interface PokemonsData {
-  next: string | null;
-  previous: string | null;
-  pokemons: Pokemon[];
+  currentPage: number;
+  totalPages: number;
+  pokemonQtd: number;
+  pokemonList: PokemonIdentifier[];
+  paginatedPokemonDetailedList?: PaginatedPokemonDetailedList;
 }
 
 /**

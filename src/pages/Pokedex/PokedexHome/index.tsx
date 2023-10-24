@@ -1,30 +1,24 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react';
 import {TextInput} from 'react-native';
 import {
-  Card,
-  CardBackGroundImage,
-  CardImageColumn,
-  CardTextColumn,
   Container,
   Flatlist,
   InputContainer,
-  PokemonId,
-  PokemonImage,
-  PokemonName,
   MaterialIcon,
   SearchInput,
-  TypeContainer,
-  TypeText,
   CleanButton,
 } from './styles';
 import {useDispatch} from 'react-redux';
 import {PokemonsTypedSelector} from '~/store/modules/pokemons/reducer';
-import {pokemonsRequest} from '~/store/modules/pokemons/action';
+import {
+  pokemonListRequest,
+  pokemonPageRequest,
+} from '~/store/modules/pokemons/action';
 
-import Pokeball from '~/assets/images/pokeball.png';
 import {Pokemon} from '~/store/modules/pokemons/types';
 import {NavigationProp} from '@react-navigation/native';
 import {PokedexStackParamList} from '~/routes/pokedexStack';
+import {PokemonCardComponent} from './components';
 
 interface PokedexHomeProps {
   navigation: NavigationProp<PokedexStackParamList>;
@@ -36,13 +30,18 @@ const PokedexHome: React.FC<PokedexHomeProps> = ({navigation}) => {
 
   const searchInputRef = useRef<TextInput>(null);
   const [searchText, setSearchText] = useState('');
+  const [currentList, setCurrentList] = useState<Pokemon[]>([]);
 
   useEffect(() => {
     // Get pokemons if dont exist in redux persist
-    if (data.pokemons.length <= 0) {
-      dispatch(pokemonsRequest());
+    if (data.pokemonList.length <= 0) {
+      dispatch(pokemonListRequest());
+    } else if (!data.paginatedPokemonDetailedList?.[data.currentPage]) {
+      dispatch(pokemonPageRequest(data.currentPage));
+    } else {
+      setCurrentList(data.paginatedPokemonDetailedList[data.currentPage]);
     }
-  }, []);
+  }, [data.paginatedPokemonDetailedList]);
 
   // Verify if user typed in the search input
   const existSearchText = useMemo(() => {
@@ -85,31 +84,15 @@ const PokedexHome: React.FC<PokedexHomeProps> = ({navigation}) => {
         </CleanButton>
       </InputContainer>
       <Flatlist
-        data={data.pokemons}
+        data={currentList}
+        extraData={currentList}
+        keyExtractor={item => String(item.id)}
         numColumns={2}
         renderItem={({item}) => (
-          <Card
-            onPress={() => openPokemonDetail(item)}
-            pokemonType={item.types?.[0]}>
-            <CardBackGroundImage
-              source={Pokeball}
-              pokemonType={item.types?.[0]}>
-              <CardTextColumn>
-                <PokemonName>{item.name || ''}</PokemonName>
-                {item?.types.map((type: string, i: number) => (
-                  <TypeContainer key={String(i)}>
-                    <TypeText>{type}</TypeText>
-                  </TypeContainer>
-                ))}
-              </CardTextColumn>
-              <CardImageColumn>
-                <PokemonId pokemonType={item.types?.[0]}>
-                  {item.idText}
-                </PokemonId>
-                <PokemonImage source={{uri: item?.sprite}} />
-              </CardImageColumn>
-            </CardBackGroundImage>
-          </Card>
+          <PokemonCardComponent
+            pokemon={item}
+            onSelectPokemon={openPokemonDetail}
+          />
         )}
       />
     </Container>

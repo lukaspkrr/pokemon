@@ -1,10 +1,10 @@
 import {rgba} from 'polished';
 import {TabBar} from 'react-native-tab-view';
 import styled from 'styled-components/native';
-import {PokemonTypesTheme} from '~/styles/types';
+import {PokemonTypesEnum} from '~/styles/types';
 
 interface ContainerProps {
-  pokemonType?: keyof PokemonTypesTheme;
+  pokemonType?: PokemonTypesEnum;
 }
 export const Container = styled.SafeAreaView<ContainerProps>`
   flex: 1;
@@ -102,5 +102,5 @@ export const RNTabBar = styled(TabBar).attrs(({theme}) => ({
   activeColor: theme.text,
   inactiveColor: rgba(theme.text, 0.4),
 }))`
-  background-color: transparent;
+  background-color: ${({theme}) => theme.secundary};
 `;

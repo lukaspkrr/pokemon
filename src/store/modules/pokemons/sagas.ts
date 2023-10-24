@@ -1,46 +1,126 @@
-import {takeLatest, call, put, all} from 'redux-saga/effects';
+import {takeLatest, call, put, all, select} from 'redux-saga/effects';
 
 import {AxiosResponse} from 'axios';
 import {Api} from '~/services';
 
-import {PokemonsData, PokemonsActionTypes} from './types';
+import {
+  PokemonsActionTypes,
+  PokemonIdentifier,
+  Pokemon,
+  PokemonsState,
+} from './types';
 
-import {pokemonsSuccess, pokemonsFailure} from './action';
-import {idToText} from '~/utils';
+import {
+  pokemonListSuccess,
+  pokemonListFailure,
+  pokemonPageSuccess,
+  pokemonPageFailue,
+  pokemonPageRequest,
+} from './action';
+import {formatId} from '~/utils';
+import {PayloadAction} from '@reduxjs/toolkit';
+
+// Max qtd pokemons for search
+const LIMIT_VALUE = 1500;
+
+export const POKEMON_PAGE_SIZE = 20;
+
+interface PokemonResponse {
+  count: number;
+  next: string;
+  previous: string;
+  results: [
+    {
+      name: string;
+      url: string;
+    },
+  ];
+}
 
 export function* getPokemonList() {
   try {
-    const pokemonsList: AxiosResponse = yield call(Api.get, '/pokemon');
-    console.tron.log('POKE DATA', pokemonsList);
-    let dataToSave: PokemonsData = {
-      next: pokemonsList.data.next,
-      previous: pokemonsList.data.previous,
-      pokemons: [],
+    const {data: responseData}: AxiosResponse<PokemonResponse> = yield call(
+      Api.get,
+      '/pokemon',
+      {
+        params: {
+          limit: LIMIT_VALUE,
+        },
+      },
+    );
+
+    const pokemonList: PokemonIdentifier[] = responseData.results?.map(
+      result => {
+        const splitUrl = result.url.split('/');
+        const id = Number(splitUrl[splitUrl.length - 2]);
+        return {
+          id,
+          idText: formatId(id),
+          name: result.name,
+        };
+      },
+    );
+
+    const data = {
+      currentPage: 0,
+      totalPages: Math.ceil(responseData.count / POKEMON_PAGE_SIZE),
+      pokemonQtd: responseData.count,
+      pokemonList,
     };
 
-    const value: AxiosResponse[] = yield all(
-      pokemonsList.data?.results.map((e: {url: string}) => {
-        let pokeId = e.url.split('pokemon/')[1];
-        return call(Api.get, `/pokemon/${pokeId}`);
+    yield put(pokemonListSuccess(data));
+    yield put(pokemonPageRequest(0));
+  } catch (error) {
+    yield put(pokemonListFailure());
+  }
+}
+
+export function* getPokemonPage({payload}: PayloadAction<{page: number}>) {
+  try {
+    const {data: reducerData}: PokemonsState = yield select(
+      state => state.pokemons,
+    );
+
+    const firstId = payload.page * POKEMON_PAGE_SIZE;
+    const lastId = firstId + POKEMON_PAGE_SIZE;
+
+    const pokemonList = reducerData.pokemonList.slice(firstId, lastId);
+
+    let detailedPokemonList: Pokemon[] = [];
+
+    yield Promise.all(
+      pokemonList.map(async pokemon => {
+        const {data: detailPokemon}: AxiosResponse = await Api.get(
+          `/pokemon/${pokemon.id}`,
+        );
+
+        const pokeData: Pokemon = {
+          id: detailPokemon.id,
+          idText: formatId(detailPokemon.id),
+          name: detailPokemon.name,
+          sprite: detailPokemon.sprites.other['official-artwork'].front_default,
+          types: detailPokemon.types.map(
+            (el: {type: {name: any}}) => el.type.name,
+          ),
+          height: detailPokemon.height,
+          weight: detailPokemon.weight,
+          abilities: detailPokemon.abilities?.map((el: any) => ({
+            name: el?.ability.name,
+            isHidden: el?.is_hidden,
+          })),
+        };
+
+        detailedPokemonList.push(pokeData);
       }),
     );
 
-    const pokeData = value?.map(element => ({
-      id: element.data.id,
-      idText: idToText(element.data.id),
-      name: element.data.name,
-      sprite: element.data.sprites.other['official-artwork'].front_default,
-      types: element.data.types.map((el: {type: {name: any}}) => el.type.name),
-    }));
-
-    dataToSave.pokemons = pokeData;
-
-    yield put(pokemonsSuccess(dataToSave));
+    yield put(pokemonPageSuccess(payload.page, detailedPokemonList));
   } catch (error) {
-    yield put(pokemonsFailure());
+    yield put(pokemonPageFailue());
   }
 }
 
 export default all([
-  takeLatest(PokemonsActionTypes.POKEMONS_REQUEST, getPokemonList),
+  takeLatest(PokemonsActionTypes.POKEMON_LIST_REQUEST, getPokemonList),
+  takeLatest(PokemonsActionTypes.POKEMON_PAGE_REQUEST, getPokemonPage),
 ]);

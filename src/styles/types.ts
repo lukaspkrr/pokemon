@@ -12,26 +12,30 @@ export interface GlobalTheme {
   black: string;
 }
 
-export interface PokemonTypesTheme {
-  normal: string;
-  fire: string;
-  water: string;
-  grass: string;
-  electric: string;
-  ice: string;
-  fighting: string;
-  poison: string;
-  ground: string;
-  flying: string;
-  psychic: string;
-  bug: string;
-  rock: string;
-  ghost: string;
-  dark: string;
-  dragon: string;
-  steel: string;
-  fairy: string;
+export enum PokemonTypesEnum {
+  normal = 'normal',
+  fire = 'fire',
+  water = 'water',
+  grass = 'grass',
+  electric = 'electric',
+  ice = 'ice',
+  fighting = 'fighting',
+  poison = 'poison',
+  ground = 'ground',
+  flying = 'flying',
+  psychic = 'psychic',
+  bug = 'bug',
+  rock = 'rock',
+  ghost = 'ghost',
+  dark = 'dark',
+  dragon = 'dragon',
+  steel = 'steel',
+  fairy = 'fairy',
 }
+
+export type PokemonTypesTheme = Required<
+  Record<keyof typeof PokemonTypesEnum, string>
+>;
 
 export interface DarkLightTheme extends GlobalTheme, PokemonTypesTheme {
   title: string;
