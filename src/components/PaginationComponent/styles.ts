@@ -3,12 +3,12 @@ import Icons from 'react-native-vector-icons/FontAwesome6';
 import styled from 'styled-components/native';
 
 export const Container = styled.View`
-  background-color: ${({theme}) => theme.secundary};
+  background-color: ${({theme}) => rgba(theme.secundary, 0.9)};
   flex-direction: row;
   align-items: center;
   border-radius: 50px;
   padding: 5px;
-  border: 1px solid;
+  border-width: ${({theme}) => (theme.title === 'dark' ? '0px' : '0.5px')};
   border-color: ${({theme}) => theme.highlight};
 `;
 
@@ -30,7 +30,7 @@ export const ActionButton = styled.TouchableOpacity`
   flex: 1;
   align-items: center;
   justify-content: center;
-  min-height: 40px;
+  min-height: 30px;
 `;
 
 export const ButtonText = styled.Text`
@@ -42,7 +42,7 @@ interface FontAwesomeProps {
   readonly disabled?: boolean;
 }
 export const FontAwesome = styled(Icons).attrs({
-  size: 24,
+  size: 18,
 })<FontAwesomeProps>`
   color: ${({theme, disabled}) =>
     disabled ? rgba(theme.text, 0.3) : theme.text};
@@ -52,5 +52,5 @@ export const Separator = styled.View`
   background-color: ${({theme}) => theme.highlight};
   width: 1px;
   border-radius: 1px;
-  height: 30px;
+  height: 20px;
 `;
