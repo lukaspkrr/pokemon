@@ -4,7 +4,7 @@ import {View, Text} from 'react-native';
 const AboutComponent: React.FC = () => {
   return (
     <View>
-      <Text>AboutComponent</Text>
+      <Text>Header About Component</Text>
     </View>
   );
 };
