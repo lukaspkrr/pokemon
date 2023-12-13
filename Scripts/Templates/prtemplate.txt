@@ -1,0 +1,45 @@
+# Descrição
+
+[commit_message]
+
+## Qual sua feature flag para essa PR? 
+
+[feature_flags]
+
+## Caso não exista(m) feature(s) flag(s), explique o motivo:
+
+[no_flags]
+
+## Tipo de mudança
+ 
+[change_type]
+
+## O CI deve ser executado?
+
+[execute_ci]
+
+## Como deve ser testado?
+
+N/A
+
+## Prints da tela ou vídeo:
+
+<!--- 
+Prints da tela feita ou modificada em light e dark mode, caso se aplique 
+Light Mode | Dark Mode
+---------  | ---------
+Link foto  | Link foto
+-->
+
+<!--- Video -->
+<!--- <img width=250 src=link_video.mov> -->
+N/A
+
+## Outras observações:
+
+N/A
+
+## ✅ Checklist:
+[checklist_items]
+
+👉 Documentação detalhada - https://picpay.atlassian.net/wiki/spaces/iosteam/pages/2327478464/Code+Review+Checklist
